@@ -1289,13 +1289,13 @@ MarkdownLab uses a VS Code-inspired layout.
 
 ```txt
 ┌──────────────────────────────────────────────────────────────┐
-│ Top Toolbar                                                   │
+│ Top Toolbar                                                  │
 ├───────────────┬───────────────────────┬──────────────────────┤
-│ Document List │ Markdown Editor        │ Live Preview          │
+│ Document List │ Markdown Editor       │ Live Preview         │
 │               │                       │                      │
 │               │                       │                      │
 ├───────────────┴───────────────────────┴──────────────────────┤
-│ Status Bar: saved • words • chars • reading time • sync state │
+│ Status Bar: saved • words • chars • reading time • sync state│
 └──────────────────────────────────────────────────────────────┘
 ```
 

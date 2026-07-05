@@ -19,51 +19,82 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import remarkEmoji from 'remark-emoji'
 import remarkRehype from 'remark-rehype'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import rehypeStringify from 'rehype-stringify'
+import rehypeKatex from 'rehype-katex'
+import rehypeHighlight from 'rehype-highlight'
 
-const STORAGE_KEY = 'markdownlab:content:v3'
-const SETTINGS_KEY = 'markdownlab:settings:v4'
+const STORAGE_KEY = 'markdownlab:content:v4'
+const SETTINGS_KEY = 'markdownlab:settings:v5'
 
 const starterMarkdown = `# MarkdownLab
 
-Start typing Markdown on the left. The preview updates instantly on the right.
+A VS Code-style Markdown editor with live preview, Mermaid diagrams, math, GFM extras, and safe HTML support.
 
-## Features
+## Common Markdown
 
-- **Live preview** while you write
-- VS Code-style Markdown editor
-- Adjustable split screen
-- GitHub-Flavored Markdown tables and task lists
-- Mermaid diagrams
-- Copy Markdown
-- Export the rendered preview as PDF
+### Text formatting
 
-## Table alignment example
+Plain paragraphs support **bold**, *italic*, ***bold italic***, ~~strikethrough~~, <u>underline</u>, \\*escaped characters\\*, inline code like \`const app = "MarkdownLab"\`, and hard line breaks.  
+This line follows a two-space Markdown line break.
 
-| Feature | Status | Notes |
+### Lists
+
+- Apple
+- Banana
+  - Mango
+  - Orange
+
+1. First
+2. Second
+3. Third
+
+- [x] Completed task
+- [ ] Pending task
+
+### Links, images, and references
+
+[GitHub](https://github.com) and <https://example.com> both render as links.
+
+[Reusable reference link][docs]
+
+[docs]: https://www.markdownguide.org
+
+![Markdown logo](https://upload.wikimedia.org/wikipedia/commons/4/48/Markdown-mark.svg)
+
+### Blockquotes and alerts
+
+> This is a quote.
+>> This is a nested quote.
+
+> [!NOTE]
+> MarkdownLab supports GitHub-style alert blocks.
+
+> [!TIP]
+> Use the live preview while writing documentation.
+
+> [!WARNING]
+> Advanced Markdown features can vary between platforms.
+
+### Tables
+
+| Element | Status | Notes |
 |:---|:---:|---:|
-| Markdown | Working | Left aligned |
-| Mermaid | Working | Center aligned |
-| PDF | Working | Right aligned |
+| Tables | Supported | Left aligned |
+| Task lists | Supported | Center aligned |
+| Numbers | 100 | Right aligned |
 
-## Task list
+### Code blocks
 
-- [x] Rename app to MarkdownLab
-- [x] Use icon-only dark mode
-- [x] Use icon-only sync scroll
-- [ ] Write your next README
-
-## Code example
-
-\`\`\`ts
-const project = 'MarkdownLab'
-console.log(project)
+\`\`\`python
+print("Hello, World!")
 \`\`\`
 
-## Mermaid example
+### Mermaid diagrams
 
 \`\`\`mermaid
 flowchart LR
@@ -72,7 +103,45 @@ flowchart LR
   C --> D[Export PDF]
 \`\`\`
 
-> MarkdownLab is a static, browser-only Markdown document studio.
+### Footnotes
+
+Markdown is useful for documentation.[^1]
+
+[^1]: This is a footnote rendered through GitHub-Flavored Markdown.
+
+### Definition lists and abbreviations
+
+MarkdownLab
+: A local-first Markdown document studio.
+
+Preview
+: The rendered output shown beside the editor.
+
+*[HTML]: HyperText Markup Language
+HTML abbreviation text gets a tooltip.
+
+### Emoji, math, and HTML
+
+Emoji shortcodes work: :rocket: :smile: :warning:
+
+Inline math works: $E = mc^2$
+
+Block math works:
+
+$$
+\\int_0^1 x^2 dx = \\frac{1}{3}
+$$
+
+<details>
+<summary>Click to expand HTML content</summary>
+
+<mark>Highlighted text</mark>, <kbd>Ctrl</kbd> + <kbd>K</kbd>, H<sub>2</sub>O, and x<sup>2</sup> are allowed.
+
+</details>
+
+---
+
+MarkdownLab stays browser-only and static-hosting friendly.
 `
 
 type ThemeMode = 'dark' | 'light'
@@ -97,14 +166,28 @@ const markdownSchema = {
       ['target'],
       ['rel'],
     ],
+    abbr: [
+      ...(defaultSchema.attributes?.abbr || []),
+      ['title'],
+    ],
     code: [
       ...(defaultSchema.attributes?.code || []),
-      ['className', /^language-[A-Za-z0-9_-]+$/],
+      ['className', /^language-[A-Za-z0-9_-]+$/, 'math-inline', 'math-display'],
+    ],
+    details: [
+      ...(defaultSchema.attributes?.details || []),
+      ['open'],
     ],
     div: [
       ...(defaultSchema.attributes?.div || []),
       ['className'],
       ['dataLanguage'],
+    ],
+    input: [
+      ...(defaultSchema.attributes?.input || []),
+      ['type', 'checkbox'],
+      ['checked'],
+      ['disabled'],
     ],
     th: [
       ...(defaultSchema.attributes?.th || []),
@@ -114,16 +197,21 @@ const markdownSchema = {
       ...(defaultSchema.attributes?.td || []),
       ['align'],
     ],
-    input: [
-      ...(defaultSchema.attributes?.input || []),
-      ['type', 'checkbox'],
-      ['checked'],
-      ['disabled'],
-    ],
   },
   tagNames: [
     ...(defaultSchema.tagNames || []),
+    'abbr',
+    'dd',
+    'details',
+    'dl',
+    'dt',
     'input',
+    'kbd',
+    'mark',
+    'sub',
+    'summary',
+    'sup',
+    'u',
   ],
 } as Parameters<typeof rehypeSanitize>[0]
 
@@ -233,9 +321,175 @@ function getClassNames(value: unknown): string[] {
   return []
 }
 
-function enhanceHastForPreview() {
+type AbbreviationDefinition = {
+  term: string
+  title: string
+}
+
+const alertLabels: Record<string, string> = {
+  note: 'Note',
+  tip: 'Tip',
+  important: 'Important',
+  warning: 'Warning',
+  caution: 'Caution',
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function extractAbbreviations(markdownSource: string) {
+  const abbreviations: AbbreviationDefinition[] = []
+  const source = markdownSource.replace(/^\*\[([^\]]+)\]:\s*(.+)$/gm, (_match, term: string, title: string) => {
+    abbreviations.push({ term: term.trim(), title: title.trim() })
+    return ''
+  })
+
+  return { source, abbreviations }
+}
+
+function convertDefinitionLists(markdownSource: string) {
+  const lines = markdownSource.split('\n')
+  const output: string[] = []
+  let inFence = false
+  let index = 0
+
+  while (index < lines.length) {
+    const line = lines[index]
+    const trimmed = line.trim()
+
+    if (/^(```|~~~)/.test(trimmed)) {
+      inFence = !inFence
+      output.push(line)
+      index += 1
+      continue
+    }
+
+    if (!inFence && trimmed && lines[index + 1]?.trimStart().startsWith(': ')) {
+      output.push('<dl>')
+
+      while (index < lines.length) {
+        const term = lines[index]?.trim()
+        if (!term || !lines[index + 1]?.trimStart().startsWith(': ')) break
+
+        output.push(`<dt>${escapeHtml(term)}</dt>`)
+        index += 1
+
+        while (index < lines.length && lines[index].trimStart().startsWith(': ')) {
+          const definition = lines[index].trimStart().slice(2).trim()
+          output.push(`<dd>${escapeHtml(definition)}</dd>`)
+          index += 1
+        }
+
+        if (!lines[index]?.trim() || !lines[index + 1]?.trimStart().startsWith(': ')) break
+      }
+
+      output.push('</dl>')
+      continue
+    }
+
+    output.push(line)
+    index += 1
+  }
+
+  return output.join('\n')
+}
+
+function stripAlertMarker(node: HastElement, type: string) {
+  const pattern = new RegExp(`^\\s*\\[!${type}\\]\\s*`, 'i')
+  let stripped = false
+
+  visitHast(node, (child, parent, index) => {
+    if (stripped || child.type !== 'text' || typeof child.value !== 'string') return
+
+    child.value = child.value.replace(pattern, '')
+    stripped = true
+
+    if (child.value === '' && parent && index !== null && Array.isArray(parent.children)) {
+      parent.children.splice(index, 1)
+    }
+  })
+}
+
+function transformAlert(node: HastElement) {
+  if (node.tagName !== 'blockquote' || !Array.isArray(node.children)) return
+
+  const text = getHastText(node).trimStart()
+  const match = /^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/i.exec(text)
+  if (!match) return
+
+  const type = match[1].toLowerCase()
+  stripAlertMarker(node, type)
+
+  node.tagName = 'div'
+  node.properties = {
+    ...node.properties,
+    className: ['mlp-alert', `mlp-alert-${type}`],
+  }
+  node.children = [
+    {
+      type: 'element',
+      tagName: 'div',
+      properties: { className: ['mlp-alert-title'] },
+      children: [{ type: 'text', value: alertLabels[type] || type }],
+    },
+    ...node.children,
+  ]
+}
+
+function applyAbbreviations(node: HastElement, parent: HastElement | null, index: number | null, abbreviations: AbbreviationDefinition[]) {
+  if (!abbreviations.length || node.type !== 'text' || typeof node.value !== 'string') return
+  if (!parent || index === null || !Array.isArray(parent.children)) return
+  if (parent.tagName && ['a', 'abbr', 'code', 'kbd', 'pre'].includes(parent.tagName)) return
+
+  const sorted = [...abbreviations].sort((a, b) => b.term.length - a.term.length)
+  const pattern = new RegExp(`\\b(${sorted.map((item) => escapeRegExp(item.term)).join('|')})\\b`, 'g')
+  const parts: HastElement[] = []
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = pattern.exec(node.value))) {
+    if (match.index > lastIndex) {
+      parts.push({ type: 'text', value: node.value.slice(lastIndex, match.index) })
+    }
+
+    const term = match[0]
+    const definition = sorted.find((item) => item.term === term)
+    parts.push({
+      type: 'element',
+      tagName: 'abbr',
+      properties: { title: definition?.title || term },
+      children: [{ type: 'text', value: term }],
+    })
+    lastIndex = match.index + term.length
+  }
+
+  if (!parts.length) return
+
+  if (lastIndex < node.value.length) {
+    parts.push({ type: 'text', value: node.value.slice(lastIndex) })
+  }
+
+  parent.children.splice(index, 1, ...parts)
+}
+
+function enhanceHastForPreview(abbreviations: AbbreviationDefinition[] = []) {
   return (tree: HastElement) => {
     visitHast(tree, (node, parent, index) => {
+      if (node.type === 'text') {
+        applyAbbreviations(node, parent, index, abbreviations)
+        return
+      }
+
       if (node.type !== 'element') return
 
       const sourceLine = node.position?.start?.line
@@ -246,6 +500,8 @@ function enhanceHastForPreview() {
           dataSourceLine: String(sourceLine),
         }
       }
+
+      transformAlert(node)
 
       if (node.tagName !== 'pre' || !Array.isArray(node.children)) return
 
@@ -274,15 +530,22 @@ function enhanceHastForPreview() {
 }
 
 async function renderMarkdown(markdownSource: string) {
+  const { source, abbreviations } = extractAbbreviations(markdownSource)
+  const normalizedSource = convertDefinitionLists(source)
+
   const file = await unified()
     .use(remarkParse)
     .use(remarkGfm)
+    .use(remarkMath)
+    .use(remarkEmoji)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
     .use(rehypeSanitize, markdownSchema)
-    .use(enhanceHastForPreview)
+    .use(enhanceHastForPreview, abbreviations)
+    .use(rehypeKatex)
+    .use(rehypeHighlight)
     .use(rehypeStringify)
-    .process(markdownSource)
+    .process(normalizedSource)
 
   return String(file)
 }
