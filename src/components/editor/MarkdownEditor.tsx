@@ -13,7 +13,7 @@ export default function MarkdownEditor() {
   const setDocumentSaved = useDocumentStore((state) => state.setDocumentSaved)
   const settings = useDocumentStore((state) => state.settings)
 
-  const editorRef = useRef<HTMLDivElement>(null)
+  const editorRef = useRef<any>(null)
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   if (!activeDoc) {

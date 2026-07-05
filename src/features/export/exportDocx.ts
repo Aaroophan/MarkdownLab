@@ -76,8 +76,8 @@ export async function exportDocx(options: ExportOptions): Promise<ExportResult> 
   }
 }
 
-function parseHtmlToDocxElements(element: Element): Paragraph[] {
-  const elements: Paragraph[] = []
+function parseHtmlToDocxElements(element: Element): Array<Paragraph | Table> {
+  const elements: Array<Paragraph | Table> = []
   const children = Array.from(element.children)
 
   for (const child of children) {
@@ -85,7 +85,7 @@ function parseHtmlToDocxElements(element: Element): Paragraph[] {
 
     if (tag === 'h1' || tag === 'h2' || tag === 'h3' || tag === 'h4' || tag === 'h5' || tag === 'h6') {
       const level = parseInt(tag[1]) as 1 | 2 | 3 | 4 | 5 | 6
-      const headingLevels: { [key: number]: HeadingLevel } = {
+      const headingLevels: Record<number, (typeof HeadingLevel)[keyof typeof HeadingLevel]> = {
         1: HeadingLevel.HEADING_1,
         2: HeadingLevel.HEADING_2,
         3: HeadingLevel.HEADING_3,
@@ -111,9 +111,8 @@ function parseHtmlToDocxElements(element: Element): Paragraph[] {
     } else if (tag === 'blockquote') {
       elements.push(
         new Paragraph({
-          text: child.textContent || '',
-          italics: true,
-          spacing: { before: 200, after: 200, before: 200 },
+          children: [new TextRun({ text: child.textContent || '', italics: true })],
+          spacing: { before: 200, after: 200 },
         })
       )
     } else if (tag === 'ul' || tag === 'ol') {

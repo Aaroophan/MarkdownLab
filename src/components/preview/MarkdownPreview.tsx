@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { ElementType, useRef } from 'react'
 import ReactMarkdown from 'markdown-to-jsx'
 import { useDocumentStore } from '@/features/documents/documentStore'
 
@@ -50,7 +50,7 @@ const InlineCode = ({ children }: { children: string }) => (
 )
 
 const Heading = ({ level, children }: { level: number; children: React.ReactNode }) => {
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements
+  const Tag = `h${level}` as ElementType
   const sizeClasses = {
     1: 'text-3xl',
     2: 'text-2xl',
