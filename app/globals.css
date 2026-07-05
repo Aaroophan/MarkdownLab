@@ -154,8 +154,13 @@ a:focus-visible {
   --mlp-preview: #ffffff;
   --mlp-accent: #2563eb;
   --mlp-accent-soft: #dbeafe;
-  --mlp-code-bg: #0f172a;
-  --mlp-code-text: #e5e7eb;
+  --mlp-code-bg: #f8fafc;
+  --mlp-code-text: #0f172a;
+  --mlp-code-caption-bg: #e2e8f0;
+  --mlp-code-caption-text: #334155;
+  --mlp-code-border: #cbd5e1;
+  --mlp-mermaid-bg: #ffffff;
+  --mlp-mermaid-text: #111827;
   --mlp-shadow: rgba(15, 23, 42, 0.12);
   width: 100vw;
   height: 100vh;
@@ -181,6 +186,11 @@ a:focus-visible {
   --mlp-accent-soft: rgba(96, 165, 250, 0.14);
   --mlp-code-bg: #020617;
   --mlp-code-text: #e5e7eb;
+  --mlp-code-caption-bg: #0f172a;
+  --mlp-code-caption-text: #cbd5e1;
+  --mlp-code-border: #334155;
+  --mlp-mermaid-bg: #0f172a;
+  --mlp-mermaid-text: #e5e7eb;
   --mlp-shadow: rgba(0, 0, 0, 0.32);
 }
 
@@ -329,10 +339,15 @@ a:focus-visible {
 
 .mlp-editor-host .cm-content {
   padding: 1rem 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .mlp-editor-host .cm-line {
   padding: 0 1.25rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .mlp-resizer {
@@ -377,6 +392,12 @@ a:focus-visible {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 1rem;
   line-height: 1.72;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.mlp-preview-content {
+  min-width: 0;
 }
 
 .mlp-preview-content > :first-child {
@@ -418,6 +439,7 @@ a:focus-visible {
 
 .mlp-preview p {
   margin: 0.9rem 0;
+  overflow-wrap: anywhere;
 }
 
 .mlp-preview p,
@@ -440,6 +462,7 @@ a:focus-visible {
 .mlp-preview li {
   margin: 0.35rem 0;
   padding-left: 0.25rem;
+  overflow-wrap: anywhere;
 }
 
 .mlp-preview li > ul,
@@ -537,10 +560,32 @@ a:focus-visible {
   font-size: 0.9em;
 }
 
+.mlp-preview pre {
+  margin: 1.2rem 0;
+  overflow: auto;
+  border: 1px solid var(--mlp-code-border);
+  border-radius: 0.7rem;
+  padding: 1rem;
+  background: var(--mlp-code-bg);
+  color: var(--mlp-code-text);
+  box-shadow: 0 8px 24px var(--mlp-shadow);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.mlp-preview pre code {
+  background: transparent;
+  color: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .mlp-code-block {
   margin: 1.2rem 0;
   overflow: hidden;
-  border: 1px solid var(--mlp-border);
+  border: 1px solid var(--mlp-code-border);
   border-radius: 0.7rem;
   background: var(--mlp-code-bg);
   box-shadow: 0 8px 24px var(--mlp-shadow);
@@ -553,37 +598,46 @@ a:focus-visible {
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0 0.75rem;
-  color: #cbd5e1;
-  background: #0f172a;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  color: var(--mlp-code-caption-text);
+  background: var(--mlp-code-caption-bg);
+  border-bottom: 1px solid var(--mlp-code-border);
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: 0.75rem;
 }
 
 .mlp-code-copy {
   border-radius: 0.4rem;
-  background: rgba(148, 163, 184, 0.14);
-  color: #e5e7eb;
+  background: color-mix(in srgb, var(--mlp-code-caption-text) 12%, transparent);
+  color: var(--mlp-code-caption-text);
   padding: 0.25rem 0.55rem;
   font-size: 0.75rem;
 }
 
 .mlp-code-copy:hover {
-  background: rgba(148, 163, 184, 0.24);
+  background: color-mix(in srgb, var(--mlp-code-caption-text) 20%, transparent);
 }
 
 .mlp-code-block pre {
   margin: 0;
   overflow: auto;
+  border: 0;
+  border-radius: 0;
   padding: 1rem;
   background: var(--mlp-code-bg);
   color: var(--mlp-code-text);
+  box-shadow: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .mlp-code-block code {
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: 0.9rem;
   line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .mlp-mermaid,
@@ -599,13 +653,20 @@ a:focus-visible {
 .mlp-mermaid {
   display: flex;
   justify-content: center;
-  background: #ffffff;
-  color: #111827;
+  background: var(--mlp-mermaid-bg);
+  color: var(--mlp-mermaid-text);
+  box-shadow: 0 8px 24px var(--mlp-shadow);
 }
 
 .mlp-mermaid svg {
   display: block;
   margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.mlp-shell.is-dark .mlp-mermaid {
+  border-color: rgba(96, 165, 250, 0.45);
 }
 
 .mlp-mermaid-loading {

@@ -3,6 +3,7 @@
 import CodeMirror from '@uiw/react-codemirror'
 import { markdown } from '@codemirror/lang-markdown'
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github'
+import { EditorView } from '@codemirror/view'
 import {
   Check,
   Copy,
@@ -263,6 +264,7 @@ export default function AppShell() {
   const previewArticleRef = useRef<HTMLElement | null>(null)
   const scrollSourceRef = useRef<'editor' | 'preview' | null>(null)
   const scrollReleaseTimerRef = useRef<number | null>(null)
+  const syncScrollRef = useRef(syncScroll)
 
   const words = useMemo(() => getWordCount(content), [content])
   const chars = content.length
@@ -271,6 +273,10 @@ export default function AppShell() {
     setToast({ message, tone })
     window.setTimeout(() => setToast(null), 2200)
   }, [])
+
+  useEffect(() => {
+    syncScrollRef.current = syncScroll
+  }, [syncScroll])
 
   const releaseScrollSource = useCallback(() => {
     if (scrollReleaseTimerRef.current) {
@@ -331,7 +337,7 @@ export default function AppShell() {
   }, [theme, syncScroll, splitPercent, mounted])
 
   const handleEditorScroll = useCallback(() => {
-    if (!syncScroll || scrollSourceRef.current === 'preview') return
+    if (!syncScrollRef.current || scrollSourceRef.current === 'preview') return
 
     const editor = getEditorScrollElement(editorViewRef.current)
     const preview = previewScrollerRef.current
@@ -340,12 +346,17 @@ export default function AppShell() {
     scrollSourceRef.current = 'editor'
     const editorRange = Math.max(1, editor.scrollHeight - editor.clientHeight)
     const previewRange = Math.max(1, preview.scrollHeight - preview.clientHeight)
-    preview.scrollTop = (editor.scrollTop / editorRange) * previewRange
+    const nextTop = (editor.scrollTop / editorRange) * previewRange
+
+    if (Math.abs(preview.scrollTop - nextTop) > 1) {
+      preview.scrollTop = nextTop
+    }
+
     releaseScrollSource()
-  }, [releaseScrollSource, syncScroll])
+  }, [releaseScrollSource])
 
   const handlePreviewScroll = useCallback(() => {
-    if (!syncScroll || scrollSourceRef.current === 'editor') return
+    if (!syncScrollRef.current || scrollSourceRef.current === 'editor') return
 
     const editor = getEditorScrollElement(editorViewRef.current)
     const preview = previewScrollerRef.current
@@ -354,9 +365,26 @@ export default function AppShell() {
     scrollSourceRef.current = 'preview'
     const previewRange = Math.max(1, preview.scrollHeight - preview.clientHeight)
     const editorRange = Math.max(1, editor.scrollHeight - editor.clientHeight)
-    editor.scrollTop = (preview.scrollTop / previewRange) * editorRange
+    const nextTop = (preview.scrollTop / previewRange) * editorRange
+
+    if (Math.abs(editor.scrollTop - nextTop) > 1) {
+      editor.scrollTop = nextTop
+    }
+
     releaseScrollSource()
-  }, [releaseScrollSource, syncScroll])
+  }, [releaseScrollSource])
+
+  const editorScrollExtension = useMemo(() => {
+    return EditorView.domEventHandlers({
+      scroll: () => {
+        window.requestAnimationFrame(handleEditorScroll)
+      },
+    })
+  }, [handleEditorScroll])
+
+  const editorExtensions = useMemo(() => {
+    return [markdown(), EditorView.lineWrapping, editorScrollExtension]
+  }, [editorScrollExtension])
 
   useEffect(() => {
     if (!isDraggingSplit) return
@@ -393,7 +421,7 @@ export default function AppShell() {
     let cancelled = false
 
     async function enhancePreview() {
-      if (!article) return
+      if (!article || cancelled) return
 
       article.querySelectorAll<HTMLAnchorElement>('a[href]').forEach((link) => {
         link.target = '_blank'
@@ -401,10 +429,14 @@ export default function AppShell() {
       })
 
       article.querySelectorAll<HTMLPreElement>('pre').forEach((pre) => {
+        if (pre.closest('.mlp-code-block') || pre.closest('.mlp-mermaid') || pre.closest('.mlp-mermaid-error')) {
+          return
+        }
+
         const code = pre.querySelector('code')
         const isMermaid = Array.from(code?.classList || []).some((className) => className === 'language-mermaid')
 
-        if (isMermaid || pre.closest('.mlp-code-block')) return
+        if (isMermaid) return
 
         const rawCode = code?.textContent || pre.textContent || ''
         const languageClass = Array.from(code?.classList || []).find((className) => className.startsWith('language-'))
@@ -441,7 +473,42 @@ export default function AppShell() {
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'strict',
-          theme: theme === 'dark' ? 'dark' : 'default',
+          theme: theme === 'dark' ? 'base' : 'default',
+          darkMode: theme === 'dark',
+          fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
+          themeVariables:
+            theme === 'dark'
+              ? {
+                  background: '#0f172a',
+                  mainBkg: '#dbeafe',
+                  primaryColor: '#dbeafe',
+                  primaryBorderColor: '#60a5fa',
+                  primaryTextColor: '#0f172a',
+                  secondaryColor: '#dcfce7',
+                  secondaryBorderColor: '#22c55e',
+                  secondaryTextColor: '#052e16',
+                  tertiaryColor: '#fee2e2',
+                  tertiaryBorderColor: '#fb7185',
+                  tertiaryTextColor: '#450a0a',
+                  clusterBkg: '#111827',
+                  clusterBorder: '#475569',
+                  lineColor: '#93c5fd',
+                  textColor: '#e5e7eb',
+                  titleColor: '#e5e7eb',
+                  nodeTextColor: '#0f172a',
+                  edgeLabelBackground: '#111827',
+                  labelTextColor: '#e5e7eb',
+                }
+              : {
+                  background: '#ffffff',
+                  mainBkg: '#eff6ff',
+                  primaryColor: '#eff6ff',
+                  primaryBorderColor: '#2563eb',
+                  primaryTextColor: '#111827',
+                  lineColor: '#2563eb',
+                  textColor: '#111827',
+                  titleColor: '#111827',
+                },
         })
 
         await Promise.all(
@@ -455,12 +522,28 @@ export default function AppShell() {
             wrapper.textContent = 'Rendering Mermaid diagram...'
             pre.replaceWith(wrapper)
 
+            if (!chart.trim()) {
+              wrapper.className = 'mlp-mermaid-error'
+              wrapper.textContent = 'Mermaid diagram is empty.'
+              return
+            }
+
             try {
               const id = `markdownlab-mermaid-${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`
               const result = await mermaid.render(id, chart)
               if (cancelled) return
+
               wrapper.className = 'mlp-mermaid'
               wrapper.innerHTML = result.svg
+
+              const svg = wrapper.querySelector('svg')
+              if (svg) {
+                svg.setAttribute('role', 'img')
+                svg.setAttribute('aria-label', 'Rendered Mermaid diagram')
+                svg.removeAttribute('height')
+                svg.style.maxWidth = '100%'
+                svg.style.height = 'auto'
+              }
             } catch (error) {
               if (cancelled) return
               wrapper.className = 'mlp-mermaid-error'
@@ -478,12 +561,15 @@ export default function AppShell() {
       }
     }
 
-    enhancePreview()
+    const frame = window.requestAnimationFrame(() => {
+      void enhancePreview()
+    })
 
     return () => {
       cancelled = true
+      window.cancelAnimationFrame(frame)
     }
-  }, [previewHtml, theme])
+  }, [previewHtml, theme, content])
 
   const resetContent = useCallback(() => {
     setContent(starterMarkdown)
@@ -584,7 +670,7 @@ export default function AppShell() {
           <FileText size={24} />
           <div>
             <h1>MarkdownLab</h1>
-            <p>VS Code-style Markdown editor + instant rendered preview</p>
+            <p>Instant rendered preview</p>
           </div>
         </div>
 
@@ -633,13 +719,9 @@ export default function AppShell() {
               onChange={(value) => setContent(value)}
               onCreateEditor={(view) => {
                 editorViewRef.current = view
+                window.requestAnimationFrame(handleEditorScroll)
               }}
-              onUpdate={(update: any) => {
-                if (update.scrollChanged) {
-                  handleEditorScroll()
-                }
-              }}
-              extensions={[markdown()]}
+              extensions={editorExtensions}
               theme={editorTheme}
               height="100%"
               width="100%"
