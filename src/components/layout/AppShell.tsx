@@ -5,7 +5,6 @@ import { markdown } from '@codemirror/lang-markdown'
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github'
 import { EditorView } from '@codemirror/view'
 import {
-  Check,
   Copy,
   Download,
   FileText,
@@ -26,7 +25,7 @@ import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
 import rehypeStringify from 'rehype-stringify'
 
 const STORAGE_KEY = 'markdownlab:content:v3'
-const SETTINGS_KEY = 'markdownlab:settings:v3'
+const SETTINGS_KEY = 'markdownlab:settings:v4'
 
 const starterMarkdown = `# MarkdownLab
 
@@ -130,23 +129,23 @@ const markdownSchema = {
 
 function readSettings(): PersistedSettings {
   if (typeof window === 'undefined') {
-    return { theme: 'dark', syncScroll: true, splitPercent: 50 }
+    return { theme: 'light', syncScroll: true, splitPercent: 50 }
   }
 
   try {
     const saved = localStorage.getItem(SETTINGS_KEY)
-    if (!saved) return { theme: 'dark', syncScroll: true, splitPercent: 50 }
+    if (!saved) return { theme: 'light', syncScroll: true, splitPercent: 50 }
 
     const parsed = JSON.parse(saved) as Partial<PersistedSettings>
     const splitPercent = typeof parsed.splitPercent === 'number' ? parsed.splitPercent : 50
 
     return {
-      theme: parsed.theme === 'light' ? 'light' : 'dark',
+      theme: parsed.theme === 'dark' ? 'dark' : 'light',
       syncScroll: typeof parsed.syncScroll === 'boolean' ? parsed.syncScroll : true,
       splitPercent: Math.min(75, Math.max(25, splitPercent)),
     }
   } catch {
-    return { theme: 'dark', syncScroll: true, splitPercent: 50 }
+    return { theme: 'light', syncScroll: true, splitPercent: 50 }
   }
 }
 
@@ -198,6 +197,82 @@ async function copyToClipboard(text: string) {
   textarea.remove()
 }
 
+
+type HastElement = {
+  type: string
+  tagName?: string
+  properties?: Record<string, unknown>
+  children?: HastElement[]
+  value?: string
+  position?: {
+    start?: {
+      line?: number
+    }
+  }
+}
+
+function visitHast(node: HastElement, visitor: (node: HastElement, parent: HastElement | null, index: number | null) => void, parent: HastElement | null = null, index: number | null = null) {
+  visitor(node, parent, index)
+
+  if (!Array.isArray(node.children)) return
+
+  node.children.forEach((child, childIndex) => {
+    visitHast(child, visitor, node, childIndex)
+  })
+}
+
+function getHastText(node: HastElement): string {
+  if (typeof node.value === 'string') return node.value
+  if (!Array.isArray(node.children)) return ''
+  return node.children.map((child) => getHastText(child)).join('')
+}
+
+function getClassNames(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map(String)
+  if (typeof value === 'string') return value.split(/\s+/).filter(Boolean)
+  return []
+}
+
+function enhanceHastForPreview() {
+  return (tree: HastElement) => {
+    visitHast(tree, (node, parent, index) => {
+      if (node.type !== 'element') return
+
+      const sourceLine = node.position?.start?.line
+
+      if (typeof sourceLine === 'number') {
+        node.properties = {
+          ...node.properties,
+          dataSourceLine: String(sourceLine),
+        }
+      }
+
+      if (node.tagName !== 'pre' || !Array.isArray(node.children)) return
+
+      const code = node.children.find((child) => child.type === 'element' && child.tagName === 'code')
+      const classNames = getClassNames(code?.properties?.className)
+      const isMermaid = classNames.includes('language-mermaid')
+
+      if (!isMermaid || !parent || index === null || !Array.isArray(parent.children)) return
+
+      parent.children[index] = {
+        type: 'element',
+        tagName: 'div',
+        properties: {
+          className: ['mlp-mermaid-source'],
+          dataSourceLine: String(sourceLine ?? code?.position?.start?.line ?? ''),
+        },
+        children: [
+          {
+            type: 'text',
+            value: getHastText(code || node),
+          },
+        ],
+      }
+    })
+  }
+}
+
 async function renderMarkdown(markdownSource: string) {
   const file = await unified()
     .use(remarkParse)
@@ -205,6 +280,7 @@ async function renderMarkdown(markdownSource: string) {
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
     .use(rehypeSanitize, markdownSchema)
+    .use(enhanceHastForPreview)
     .use(rehypeStringify)
     .process(markdownSource)
 
@@ -245,6 +321,79 @@ function ToggleIconButton({
 
 function getEditorScrollElement(editorView: any): HTMLElement | null {
   return editorView?.scrollDOM instanceof HTMLElement ? editorView.scrollDOM : null
+}
+
+function getVisibleEditorLine(editorView: any, editor: HTMLElement) {
+  try {
+    const block = editorView.lineBlockAtHeight(editor.scrollTop + editor.clientHeight * 0.08)
+    return editorView.state.doc.lineAt(block.from).number
+  } catch {
+    const lineHeight = parseFloat(getComputedStyle(editor).lineHeight) || 24
+    return Math.max(1, Math.round(editor.scrollTop / lineHeight) + 1)
+  }
+}
+
+function getPreviewBlocks(article: HTMLElement) {
+  return Array.from(article.querySelectorAll<HTMLElement>('[data-source-line]'))
+    .map((element) => ({
+      element,
+      line: Number(element.dataset.sourceLine),
+    }))
+    .filter((item) => Number.isFinite(item.line) && item.line > 0)
+    .sort((a, b) => a.line - b.line)
+}
+
+function findPreviewBlockForLine(article: HTMLElement, line: number) {
+  const blocks = getPreviewBlocks(article)
+  if (!blocks.length) return null
+
+  let best = blocks[0]
+  for (const block of blocks) {
+    if (block.line > line) break
+    best = block
+  }
+
+  return best.element
+}
+
+function getTopVisiblePreviewLine(article: HTMLElement, preview: HTMLElement) {
+  const blocks = getPreviewBlocks(article)
+  if (!blocks.length) return null
+
+  const previewRect = preview.getBoundingClientRect()
+  const anchorTop = previewRect.top + preview.clientHeight * 0.08
+  let best = blocks[0]
+  let bestDistance = Number.POSITIVE_INFINITY
+
+  for (const block of blocks) {
+    const rect = block.element.getBoundingClientRect()
+    const distance = Math.abs(rect.top - anchorTop)
+
+    if (rect.bottom >= previewRect.top && distance < bestDistance) {
+      best = block
+      bestDistance = distance
+    }
+  }
+
+  return best.line
+}
+
+function scrollPreviewElementIntoSync(preview: HTMLElement, element: HTMLElement) {
+  const previewRect = preview.getBoundingClientRect()
+  const elementRect = element.getBoundingClientRect()
+  const nextTop = preview.scrollTop + elementRect.top - previewRect.top - preview.clientHeight * 0.08
+  preview.scrollTop = Math.max(0, nextTop)
+}
+
+function scrollEditorToLine(editorView: any, editor: HTMLElement, line: number) {
+  try {
+    const docLine = editorView.state.doc.line(Math.max(1, Math.min(line, editorView.state.doc.lines)))
+    const block = editorView.lineBlockAt(docLine.from)
+    editor.scrollTop = Math.max(0, block.top - editor.clientHeight * 0.08)
+  } catch {
+    const lineHeight = parseFloat(getComputedStyle(editor).lineHeight) || 24
+    editor.scrollTop = Math.max(0, (line - 1) * lineHeight - editor.clientHeight * 0.08)
+  }
 }
 
 export default function AppShell() {
@@ -341,17 +490,15 @@ export default function AppShell() {
 
     const editor = getEditorScrollElement(editorViewRef.current)
     const preview = previewScrollerRef.current
-    if (!editor || !preview) return
+    const article = previewArticleRef.current
+    if (!editor || !preview || !article) return
+
+    const sourceLine = getVisibleEditorLine(editorViewRef.current, editor)
+    const target = findPreviewBlockForLine(article, sourceLine)
+    if (!target) return
 
     scrollSourceRef.current = 'editor'
-    const editorRange = Math.max(1, editor.scrollHeight - editor.clientHeight)
-    const previewRange = Math.max(1, preview.scrollHeight - preview.clientHeight)
-    const nextTop = (editor.scrollTop / editorRange) * previewRange
-
-    if (Math.abs(preview.scrollTop - nextTop) > 1) {
-      preview.scrollTop = nextTop
-    }
-
+    scrollPreviewElementIntoSync(preview, target)
     releaseScrollSource()
   }, [releaseScrollSource])
 
@@ -360,17 +507,14 @@ export default function AppShell() {
 
     const editor = getEditorScrollElement(editorViewRef.current)
     const preview = previewScrollerRef.current
-    if (!editor || !preview) return
+    const article = previewArticleRef.current
+    if (!editor || !preview || !article) return
+
+    const sourceLine = getTopVisiblePreviewLine(article, preview)
+    if (!sourceLine) return
 
     scrollSourceRef.current = 'preview'
-    const previewRange = Math.max(1, preview.scrollHeight - preview.clientHeight)
-    const editorRange = Math.max(1, editor.scrollHeight - editor.clientHeight)
-    const nextTop = (preview.scrollTop / previewRange) * editorRange
-
-    if (Math.abs(editor.scrollTop - nextTop) > 1) {
-      editor.scrollTop = nextTop
-    }
-
+    scrollEditorToLine(editorViewRef.current, editor, sourceLine)
     releaseScrollSource()
   }, [releaseScrollSource])
 
@@ -465,7 +609,7 @@ export default function AppShell() {
         figure.append(caption, pre)
       })
 
-      const mermaidBlocks = Array.from(article.querySelectorAll<HTMLElement>('pre > code.language-mermaid'))
+      const mermaidBlocks = Array.from(article.querySelectorAll<HTMLElement>('.mlp-mermaid-source'))
       if (!mermaidBlocks.length) return
 
       try {
@@ -473,31 +617,38 @@ export default function AppShell() {
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'strict',
-          theme: theme === 'dark' ? 'base' : 'default',
+          theme: 'base',
           darkMode: theme === 'dark',
           fontFamily: 'Inter, ui-sans-serif, system-ui, sans-serif',
           themeVariables:
             theme === 'dark'
               ? {
-                  background: '#0f172a',
-                  mainBkg: '#dbeafe',
-                  primaryColor: '#dbeafe',
+                  background: '#111827',
+                  mainBkg: '#bfdbfe',
+                  primaryColor: '#bfdbfe',
                   primaryBorderColor: '#60a5fa',
                   primaryTextColor: '#0f172a',
-                  secondaryColor: '#dcfce7',
+                  secondaryColor: '#bbf7d0',
                   secondaryBorderColor: '#22c55e',
                   secondaryTextColor: '#052e16',
-                  tertiaryColor: '#fee2e2',
+                  tertiaryColor: '#fecdd3',
                   tertiaryBorderColor: '#fb7185',
                   tertiaryTextColor: '#450a0a',
-                  clusterBkg: '#111827',
-                  clusterBorder: '#475569',
-                  lineColor: '#93c5fd',
-                  textColor: '#e5e7eb',
-                  titleColor: '#e5e7eb',
+                  clusterBkg: '#1e293b',
+                  clusterBorder: '#94a3b8',
+                  lineColor: '#e0f2fe',
+                  textColor: '#f8fafc',
+                  titleColor: '#f8fafc',
                   nodeTextColor: '#0f172a',
-                  edgeLabelBackground: '#111827',
-                  labelTextColor: '#e5e7eb',
+                  edgeLabelBackground: '#0f172a',
+                  labelTextColor: '#f8fafc',
+                  labelBackground: '#0f172a',
+                  actorBkg: '#bfdbfe',
+                  actorBorder: '#60a5fa',
+                  actorTextColor: '#0f172a',
+                  noteBkgColor: '#fef3c7',
+                  noteTextColor: '#111827',
+                  noteBorderColor: '#f59e0b',
                 }
               : {
                   background: '#ffffff',
@@ -505,22 +656,34 @@ export default function AppShell() {
                   primaryColor: '#eff6ff',
                   primaryBorderColor: '#2563eb',
                   primaryTextColor: '#111827',
-                  lineColor: '#2563eb',
+                  secondaryColor: '#dcfce7',
+                  secondaryBorderColor: '#16a34a',
+                  secondaryTextColor: '#052e16',
+                  tertiaryColor: '#fef3c7',
+                  tertiaryBorderColor: '#d97706',
+                  tertiaryTextColor: '#451a03',
+                  clusterBkg: '#f8fafc',
+                  clusterBorder: '#94a3b8',
+                  lineColor: '#1d4ed8',
                   textColor: '#111827',
                   titleColor: '#111827',
+                  nodeTextColor: '#111827',
+                  edgeLabelBackground: '#ffffff',
+                  labelTextColor: '#111827',
                 },
         })
 
         await Promise.all(
-          mermaidBlocks.map(async (code, index) => {
-            const pre = code.parentElement
-            if (!pre || cancelled) return
+          mermaidBlocks.map(async (source, index) => {
+            if (cancelled) return
 
-            const chart = code.textContent || ''
+            const chart = source.textContent || ''
+            const sourceLine = source.dataset.sourceLine
             const wrapper = document.createElement('div')
             wrapper.className = 'mlp-mermaid mlp-mermaid-loading'
+            if (sourceLine) wrapper.dataset.sourceLine = sourceLine
             wrapper.textContent = 'Rendering Mermaid diagram...'
-            pre.replaceWith(wrapper)
+            source.replaceWith(wrapper)
 
             if (!chart.trim()) {
               wrapper.className = 'mlp-mermaid-error'
@@ -534,6 +697,7 @@ export default function AppShell() {
               if (cancelled) return
 
               wrapper.className = 'mlp-mermaid'
+              if (sourceLine) wrapper.dataset.sourceLine = sourceLine
               wrapper.innerHTML = result.svg
 
               const svg = wrapper.querySelector('svg')
@@ -547,6 +711,7 @@ export default function AppShell() {
             } catch (error) {
               if (cancelled) return
               wrapper.className = 'mlp-mermaid-error'
+              if (sourceLine) wrapper.dataset.sourceLine = sourceLine
               wrapper.textContent = ''
               const title = document.createElement('strong')
               const detail = document.createElement('span')
@@ -562,14 +727,18 @@ export default function AppShell() {
     }
 
     const frame = window.requestAnimationFrame(() => {
-      void enhancePreview()
+      void enhancePreview().then(() => {
+        if (!cancelled && syncScrollRef.current) {
+          window.requestAnimationFrame(handleEditorScroll)
+        }
+      })
     })
 
     return () => {
       cancelled = true
       window.cancelAnimationFrame(frame)
     }
-  }, [previewHtml, theme, content])
+  }, [previewHtml, theme, handleEditorScroll])
 
   const resetContent = useCallback(() => {
     setContent(starterMarkdown)
@@ -670,7 +839,7 @@ export default function AppShell() {
           <FileText size={24} />
           <div>
             <h1>MarkdownLab</h1>
-            <p>Instant rendered preview</p>
+            <p>VS Code-style Markdown editor + instant rendered preview</p>
           </div>
         </div>
 

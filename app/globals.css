@@ -683,6 +683,35 @@ a:focus-visible {
   white-space: pre-wrap;
 }
 
+
+.mlp-mermaid-source {
+  display: none;
+}
+
+.mlp-shell.is-dark .mlp-mermaid svg .edgeLabel,
+.mlp-shell.is-dark .mlp-mermaid svg .edgeLabel p,
+.mlp-shell.is-dark .mlp-mermaid svg .label,
+.mlp-shell.is-dark .mlp-mermaid svg .label p {
+  color: #f8fafc !important;
+  fill: #f8fafc !important;
+}
+
+.mlp-shell.is-dark .mlp-mermaid svg .nodeLabel,
+.mlp-shell.is-dark .mlp-mermaid svg .nodeLabel p,
+.mlp-shell.is-dark .mlp-mermaid svg .actor,
+.mlp-shell.is-dark .mlp-mermaid svg .actor-line,
+.mlp-shell.is-dark .mlp-mermaid svg .messageText,
+.mlp-shell.is-dark .mlp-mermaid svg .loopText {
+  color: #0f172a !important;
+}
+
+.mlp-shell.is-dark .mlp-mermaid svg .flowchart-link,
+.mlp-shell.is-dark .mlp-mermaid svg .messageLine0,
+.mlp-shell.is-dark .mlp-mermaid svg .messageLine1,
+.mlp-shell.is-dark .mlp-mermaid svg .transition {
+  stroke: #e0f2fe !important;
+}
+
 .mlp-empty-preview {
   color: var(--mlp-muted);
 }
