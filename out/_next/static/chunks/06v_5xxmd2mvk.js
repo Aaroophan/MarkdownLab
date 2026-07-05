@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,64633,e=>{"use strict";var s=e.i(72673);e.s(["default",0,function(){return(0,s.jsxs)("div",{className:"p-4",children:[(0,s.jsx)("h1",{children:"Test Page"}),(0,s.jsx)("p",{children:"If you see this, the basic app is working."})]})}])}]);

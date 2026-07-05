@@ -1102,7 +1102,7 @@ export default function AppShell() {
           <FileText size={24} />
           <div>
             <h1>MarkdownLab</h1>
-            <p>VS Code-style Markdown editor + instant rendered preview</p>
+            <p>Markdown live preview</p>
           </div>
         </div>
 
