@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  basePath: '/MarkdownLab',
+  basePath: '/',
   trailingSlash: true,
   typescript: {
     ignoreBuildErrors: true,
