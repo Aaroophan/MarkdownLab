@@ -141,7 +141,7 @@ export default function TopToolbar({
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1.5 px-2">
           <FileText className="h-4 w-4 text-primary" />
-          <h1 className="text-sm font-semibold hidden sm:inline">MarkdownLab</h1>
+          <h1 className="text-sm font-semibold hidden sm:inline">MarkdownHere</h1>
         </div>
 
         <div className="flex items-center gap-1">

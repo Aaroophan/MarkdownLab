@@ -4,7 +4,7 @@ import 'katex/dist/katex.min.css'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'MarkdownLab',
+  title: 'MarkdownHere',
   description: 'A fully client-side Markdown document studio for developers',
   icons: {
     icon: [

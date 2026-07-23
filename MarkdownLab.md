@@ -1,10 +1,10 @@
-# MarkdownLab
+# MarkdownHere
 
 <div align="center">
 
 <!-- Optional banner. Replace with your own image later. -->
 
-![MarkdownLab Banner](https://capsule-render.vercel.app/api?type=waving&color=0:0f172a,50:2563eb,100:22c55e&height=220&section=header&text=MarkdownLab&fontSize=54&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Client-side%20Markdown%20Document%20Studio%20for%20Developers&descAlignY=58&descSize=17)
+![MarkdownHere Banner](https://capsule-render.vercel.app/api?type=waving&color=0:0f172a,50:2563eb,100:22c55e&height=220&section=header&text=MarkdownHere&fontSize=54&fontColor=ffffff&animation=fadeIn&fontAlignY=38&desc=Client-side%20Markdown%20Document%20Studio%20for%20Developers&descAlignY=58&descSize=17)
 
 [![Next.js](https://img.shields.io/badge/Next.js-Static%20Export-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-UI%20Runtime-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
@@ -15,12 +15,12 @@
 
 <br />
 
-**MarkdownLab** is a fully client-side Markdown live preview studio for developers.  
+**MarkdownHere** is a fully client-side Markdown live preview studio for developers.  
 Write Markdown, preview it live, render Mermaid diagrams, export to Word/PDF/HTML/Markdown, copy content in multiple formats, manage local documents, sync editor-preview scrolling, switch between dark/light modes, and share compressed encrypted documents through the URL — all without a backend.
 
 <br />
 
-[Live Demo](https://aaroophan.github.io/MarkdownLab) · [Report Bug](https://github.com/Aaroophan/MarkdownLab/issues) · [Request Feature](https://github.com/Aaroophan/MarkdownLab/issues)
+[Live Demo](https://aaroophan.github.io/MarkdownHere) · [Report Bug](https://github.com/Aaroophan/MarkdownHere/issues) · [Request Feature](https://github.com/Aaroophan/MarkdownHere/issues)
 
 </div>
 
@@ -28,7 +28,7 @@ Write Markdown, preview it live, render Mermaid diagrams, export to Word/PDF/HTM
 
 ## Table of Contents
 
-- [1. What is MarkdownLab?](#1-what-is-markdownlab)
+- [1. What is MarkdownHere?](#1-what-is-MarkdownHere)
 - [2. Project Philosophy](#2-project-philosophy)
 - [3. Feature Overview](#3-feature-overview)
 - [4. System Constraints](#4-system-constraints)
@@ -59,9 +59,9 @@ Write Markdown, preview it live, render Mermaid diagrams, export to Word/PDF/HTM
 
 ---
 
-## 1. What is MarkdownLab?
+## 1. What is MarkdownHere?
 
-MarkdownLab is a browser-based Markdown editor built as a **static Next.js application**.
+MarkdownHere is a browser-based Markdown editor built as a **static Next.js application**.
 
 It is designed for developers who want a clean, fast, local-first writing environment for:
 
@@ -76,11 +76,11 @@ It is designed for developers who want a clean, fast, local-first writing enviro
 - quick export-ready documents
 - shareable Markdown previews
 
-Unlike a backend-based document platform, MarkdownLab does not require accounts, databases, API routes, or server storage. It works fully inside the browser.
+Unlike a backend-based document platform, MarkdownHere does not require accounts, databases, API routes, or server storage. It works fully inside the browser.
 
 ```mermaid
 mindmap
-  root((MarkdownLab))
+  root((MarkdownHere))
     Editor
       Markdown
       CodeMirror
@@ -115,7 +115,7 @@ mindmap
 
 ## 2. Project Philosophy
 
-MarkdownLab is based on five design principles.
+MarkdownHere is based on five design principles.
 
 ### 2.1 Local-first
 
@@ -143,7 +143,7 @@ Mermaid support is a core feature, not an afterthought. Diagrams should render i
 The app must work on:
 
 ```txt
-https://aaroophan.github.io/MarkdownLab
+https://aaroophan.github.io/MarkdownHere
 ```
 
 That means it must not depend on server-only Next.js features.
@@ -154,108 +154,108 @@ That means it must not depend on server-only Next.js features.
 
 ### 3.1 Editor Features
 
-| Feature | Status | Description |
-|---|---:|---|
-| Markdown editor | Planned | Write Markdown using a developer-focused editor. |
-| Live preview | Planned | Preview updates while typing. |
-| Side-by-side layout | Planned | Editor and preview displayed together. |
-| Resizable panels | Planned | Drag to resize editor and preview widths. |
-| Preview-only mode | Planned | Hide full editor UI and show clean preview. |
-| Dark/light mode | Planned | UI supports both dark and light themes. |
-| Auto save | Planned | Save active document automatically. |
-| Manual save | Planned | Explicit save action available. |
-| Multiple documents | Planned | Manage more than one local document. |
-| Open `.md` file | Planned | Import local Markdown files. |
-| Local memory | Planned | Remember documents, theme, layout, scroll, and settings. |
-| Clear local data | Planned | Reset stored browser data. |
+| Feature             |  Status | Description                                              |
+| ------------------- | ------: | -------------------------------------------------------- |
+| Markdown editor     | Planned | Write Markdown using a developer-focused editor.         |
+| Live preview        | Planned | Preview updates while typing.                            |
+| Side-by-side layout | Planned | Editor and preview displayed together.                   |
+| Resizable panels    | Planned | Drag to resize editor and preview widths.                |
+| Preview-only mode   | Planned | Hide full editor UI and show clean preview.              |
+| Dark/light mode     | Planned | UI supports both dark and light themes.                  |
+| Auto save           | Planned | Save active document automatically.                      |
+| Manual save         | Planned | Explicit save action available.                          |
+| Multiple documents  | Planned | Manage more than one local document.                     |
+| Open `.md` file     | Planned | Import local Markdown files.                             |
+| Local memory        | Planned | Remember documents, theme, layout, scroll, and settings. |
+| Clear local data    | Planned | Reset stored browser data.                               |
 
 ### 3.2 Markdown Features
 
-| Feature | Status | Description |
-|---|---:|---|
-| GitHub-Flavored Markdown | Planned | Tables, task lists, strikethrough, autolinks. |
-| Headings | Planned | `#`, `##`, `###`, etc. |
-| Tables | Planned | Markdown tables with preview rendering. |
-| Task lists | Planned | `- [ ]` and `- [x]` checkboxes. |
-| Blockquotes | Planned | Quoted text blocks. |
-| Links | Planned | Markdown links and auto-linked URLs. |
-| Images by URL | Planned | Image rendering from remote/local path URLs. |
-| Footnotes | Planned | Footnote syntax support. |
-| Emoji | Planned | Emoji rendering where supported. |
-| Math equations | Planned | Inline and block math support. |
-| Table of contents / outline | Planned | Generated from headings. |
+| Feature                     |  Status | Description                                   |
+| --------------------------- | ------: | --------------------------------------------- |
+| GitHub-Flavored Markdown    | Planned | Tables, task lists, strikethrough, autolinks. |
+| Headings                    | Planned | `#`, `##`, `###`, etc.                        |
+| Tables                      | Planned | Markdown tables with preview rendering.       |
+| Task lists                  | Planned | `- [ ]` and `- [x]` checkboxes.               |
+| Blockquotes                 | Planned | Quoted text blocks.                           |
+| Links                       | Planned | Markdown links and auto-linked URLs.          |
+| Images by URL               | Planned | Image rendering from remote/local path URLs.  |
+| Footnotes                   | Planned | Footnote syntax support.                      |
+| Emoji                       | Planned | Emoji rendering where supported.              |
+| Math equations              | Planned | Inline and block math support.                |
+| Table of contents / outline | Planned | Generated from headings.                      |
 
 ### 3.3 Developer Features
 
-| Feature | Status | Description |
-|---|---:|---|
-| Code syntax highlighting | Planned | Highlight code blocks by language. |
-| GitHub Dark code theme | Planned | Code blocks styled with GitHub Dark feel. |
-| Unsupported language fallback | Planned | Unknown language renders as plain text. |
-| Copy code block | Planned | Every code block gets a copy button. |
-| Code block filename/title | Planned | Optional title metadata for code blocks. |
-| Line numbers | Planned | Code blocks can show line numbers. |
-| Highlighted lines | Planned | Support syntax for selected highlighted lines. |
+| Feature                       |  Status | Description                                    |
+| ----------------------------- | ------: | ---------------------------------------------- |
+| Code syntax highlighting      | Planned | Highlight code blocks by language.             |
+| GitHub Dark code theme        | Planned | Code blocks styled with GitHub Dark feel.      |
+| Unsupported language fallback | Planned | Unknown language renders as plain text.        |
+| Copy code block               | Planned | Every code block gets a copy button.           |
+| Code block filename/title     | Planned | Optional title metadata for code blocks.       |
+| Line numbers                  | Planned | Code blocks can show line numbers.             |
+| Highlighted lines             | Planned | Support syntax for selected highlighted lines. |
 
 ### 3.4 Mermaid Features
 
-| Feature | Status | Description |
-|---|---:|---|
-| Mermaid block detection | Planned | Detect code blocks with `mermaid` language. |
-| Live Mermaid rendering | Planned | Render diagrams in preview. |
-| Mermaid error handling | Planned | Show readable error box if diagram fails. |
-| Mermaid in HTML export | Planned | Export with embedded Mermaid script. |
-| Mermaid in PDF export | Planned | Render diagram before PDF capture. |
-| Mermaid in DOCX export | Planned | Convert rendered diagram to image where possible. |
+| Feature                 |  Status | Description                                       |
+| ----------------------- | ------: | ------------------------------------------------- |
+| Mermaid block detection | Planned | Detect code blocks with `mermaid` language.       |
+| Live Mermaid rendering  | Planned | Render diagrams in preview.                       |
+| Mermaid error handling  | Planned | Show readable error box if diagram fails.         |
+| Mermaid in HTML export  | Planned | Export with embedded Mermaid script.              |
+| Mermaid in PDF export   | Planned | Render diagram before PDF capture.                |
+| Mermaid in DOCX export  | Planned | Convert rendered diagram to image where possible. |
 
 ### 3.5 Export Features
 
-| Export | Status | Description |
-|---|---:|---|
-| Markdown export | Planned | Download active document as `.md`. |
-| HTML export | Planned | Export full standalone HTML with styles and Mermaid support. |
-| PDF export | Planned | Export preview as document-style PDF. |
-| DOCX export | Planned | Generate real Word `.docx` file. |
-| Copy Markdown | Planned | Copy raw Markdown. |
-| Copy HTML | Planned | Copy rendered HTML. |
-| Copy plain text | Planned | Copy preview text without Markdown syntax. |
-| Copy share link | Planned | Copy compressed encrypted URL. |
+| Export          |  Status | Description                                                  |
+| --------------- | ------: | ------------------------------------------------------------ |
+| Markdown export | Planned | Download active document as `.md`.                           |
+| HTML export     | Planned | Export full standalone HTML with styles and Mermaid support. |
+| PDF export      | Planned | Export preview as document-style PDF.                        |
+| DOCX export     | Planned | Generate real Word `.docx` file.                             |
+| Copy Markdown   | Planned | Copy raw Markdown.                                           |
+| Copy HTML       | Planned | Copy rendered HTML.                                          |
+| Copy plain text | Planned | Copy preview text without Markdown syntax.                   |
+| Copy share link | Planned | Copy compressed encrypted URL.                               |
 
 ### 3.6 Share Features
 
-| Feature | Status | Description |
-|---|---:|---|
-| URL-only sharing | Planned | Store document payload in URL hash. |
-| Compression | Planned | Compress document before URL encoding. |
-| Encryption | Planned | Encrypt payload before putting into URL. |
-| No password | Planned | Anyone with link can open the document. |
+| Feature                 |  Status | Description                                   |
+| ----------------------- | ------: | --------------------------------------------- |
+| URL-only sharing        | Planned | Store document payload in URL hash.           |
+| Compression             | Planned | Compress document before URL encoding.        |
+| Encryption              | Planned | Encrypt payload before putting into URL.      |
+| No password             | Planned | Anyone with link can open the document.       |
 | Large document fallback | Planned | Offer file download if URL becomes too large. |
 
 ---
 
 ## 4. System Constraints
 
-MarkdownLab intentionally follows strict constraints.
+MarkdownHere intentionally follows strict constraints.
 
-| Constraint | Decision |
-|---|---|
-| Hosting | GitHub Pages |
-| Build type | Next.js static export |
-| Backend | None |
-| Database | None |
-| Authentication | None |
-| Server actions | Not allowed |
-| API routes | Not allowed |
-| File storage | Browser-only |
-| Sharing | URL hash payload |
-| Export processing | Browser-only |
-| Mermaid rendering | Browser-only |
-| PDF generation | Browser-only |
-| DOCX generation | Browser-only |
+| Constraint        | Decision              |
+| ----------------- | --------------------- |
+| Hosting           | GitHub Pages          |
+| Build type        | Next.js static export |
+| Backend           | None                  |
+| Database          | None                  |
+| Authentication    | None                  |
+| Server actions    | Not allowed           |
+| API routes        | Not allowed           |
+| File storage      | Browser-only          |
+| Sharing           | URL hash payload      |
+| Export processing | Browser-only          |
+| Mermaid rendering | Browser-only          |
+| PDF generation    | Browser-only          |
+| DOCX generation   | Browser-only          |
 
 ```mermaid
 flowchart TD
-    A[MarkdownLab Requirement] --> B{Needs Backend?}
+    A[MarkdownHere Requirement] --> B{Needs Backend?}
     B -->|Yes| C[Reject or Redesign]
     B -->|No| D[Client-side Module]
     D --> E[Static Export Compatible]
@@ -266,7 +266,7 @@ flowchart TD
 
 ## 5. Architecture Overview
 
-MarkdownLab is organized around independent client-side engines.
+MarkdownHere is organized around independent client-side engines.
 
 ```mermaid
 flowchart LR
@@ -287,15 +287,15 @@ flowchart LR
 
 ### Main architecture layers
 
-| Layer | Responsibility |
-|---|---|
-| App Shell | Overall layout, sidebar, panels, toolbar, status bar. |
-| Document Engine | Create, rename, delete, import, save, and switch documents. |
-| Editor Engine | CodeMirror editor, keyboard shortcuts, toolbar insertions. |
-| Preview Engine | Markdown parsing, HTML preview, Mermaid rendering, code highlighting. |
-| Export Engine | `.md`, `.html`, `.pdf`, `.docx`, copy flows. |
-| Share Engine | Compress, encrypt, encode, decode, import shared documents. |
-| Settings Engine | Theme, layout, panel ratio, sync scroll, export preferences. |
+| Layer           | Responsibility                                                        |
+| --------------- | --------------------------------------------------------------------- |
+| App Shell       | Overall layout, sidebar, panels, toolbar, status bar.                 |
+| Document Engine | Create, rename, delete, import, save, and switch documents.           |
+| Editor Engine   | CodeMirror editor, keyboard shortcuts, toolbar insertions.            |
+| Preview Engine  | Markdown parsing, HTML preview, Mermaid rendering, code highlighting. |
+| Export Engine   | `.md`, `.html`, `.pdf`, `.docx`, copy flows.                          |
+| Share Engine    | Compress, encrypt, encode, decode, import shared documents.           |
+| Settings Engine | Theme, layout, panel ratio, sync scroll, export preferences.          |
 
 ---
 
@@ -457,40 +457,40 @@ src/features/documents/documentActions.ts
 
 ```ts
 export type MarkdownDocument = {
-  id: string
-  title: string
-  content: string
-  createdAt: string
-  updatedAt: string
-  lastOpenedAt: string
-  source?: "manual" | "import" | "share"
-}
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  lastOpenedAt: string;
+  source?: "manual" | "import" | "share";
+};
 ```
 
 ### Document state
 
 ```ts
 export type DocumentState = {
-  documents: MarkdownDocument[]
-  activeDocumentId: string | null
-  dirtyDocumentIds: string[]
-}
+  documents: MarkdownDocument[];
+  activeDocumentId: string | null;
+  dirtyDocumentIds: string[];
+};
 ```
 
 ### Document actions
 
 ```ts
 export type DocumentActions = {
-  createDocument: () => void
-  importDocument: (file: File) => Promise<void>
-  renameDocument: (id: string, title: string) => void
-  deleteDocument: (id: string) => void
-  duplicateDocument: (id: string) => void
-  setActiveDocument: (id: string) => void
-  updateActiveContent: (content: string) => void
-  saveActiveDocument: () => void
-  clearAllDocuments: () => void
-}
+  createDocument: () => void;
+  importDocument: (file: File) => Promise<void>;
+  renameDocument: (id: string, title: string) => void;
+  deleteDocument: (id: string) => void;
+  duplicateDocument: (id: string) => void;
+  setActiveDocument: (id: string) => void;
+  updateActiveContent: (content: string) => void;
+  saveActiveDocument: () => void;
+  clearAllDocuments: () => void;
+};
 ```
 
 ---
@@ -523,17 +523,17 @@ src/features/editor/scrollSync.ts
 
 ### Editor commands
 
-| Command | Markdown inserted |
-|---|---|
-| Bold | `**text**` |
-| Italic | `_text_` |
-| Link | `[label](https://example.com)` |
-| Image | `![alt](https://example.com/image.png)` |
-| Code block | triple backtick block |
-| Mermaid | triple backtick `mermaid` block |
-| Table | Markdown table |
-| Quote | `> quote` |
-| Task item | `- [ ] task` |
+| Command    | Markdown inserted                       |
+| ---------- | --------------------------------------- |
+| Bold       | `**text**`                              |
+| Italic     | `_text_`                                |
+| Link       | `[label](https://example.com)`          |
+| Image      | `![alt](https://example.com/image.png)` |
+| Code block | triple backtick block                   |
+| Mermaid    | triple backtick `mermaid` block         |
+| Table      | Markdown table                          |
+| Quote      | `> quote`                               |
+| Task item  | `- [ ] task`                            |
 
 ---
 
@@ -652,7 +652,7 @@ src/features/settings/settingsStorage.ts
 
 ## 8. Markdown Rendering Pipeline
 
-MarkdownLab should not render Markdown directly with unsafe string replacement. It should use a structured Markdown pipeline.
+MarkdownHere should not render Markdown directly with unsafe string replacement. It should use a structured Markdown pipeline.
 
 ```mermaid
 flowchart TD
@@ -670,7 +670,7 @@ flowchart TD
 
 ### Why use AST-based processing?
 
-MarkdownLab needs advanced behavior:
+MarkdownHere needs advanced behavior:
 
 - detect headings for outline
 - detect Mermaid code blocks
@@ -694,7 +694,7 @@ A --> B
 ```
 
 ```ts
-const app = "MarkdownLab"
+const app = "MarkdownHere";
 ```
 ````
 
@@ -724,7 +724,7 @@ flowchart TD
 
 ### Rendering flow
 
-```mermaid
+````mermaid
 sequenceDiagram
     participant Markdown
     participant Parser
@@ -737,7 +737,7 @@ sequenceDiagram
     Preview->>Mermaid: Render diagram after DOM mount
     Mermaid-->>Preview: SVG output or error
     Preview-->>User: Show diagram or readable error
-```
+````
 
 ### Error handling
 
@@ -769,7 +769,7 @@ Expected responsibilities:
 
 ## 10. Code Highlighting Pipeline
 
-MarkdownLab should support GitHub Dark style code blocks.
+MarkdownHere should support GitHub Dark style code blocks.
 
 ### Required behavior
 
@@ -784,8 +784,8 @@ MarkdownLab should support GitHub Dark style code blocks.
 
 ````md
 ```ts title="main.ts" {2,4-5}
-const name = "MarkdownLab"
-console.log(name)
+const name = "MarkdownHere";
+console.log(name);
 ```
 ````
 
@@ -814,59 +814,59 @@ flowchart LR
 
 ```ts
 export type CodeBlockMeta = {
-  language: string | null
-  title?: string
-  highlightedLines: number[]
-  rawCode: string
-}
+  language: string | null;
+  title?: string;
+  highlightedLines: number[];
+  rawCode: string;
+};
 ```
 
 ---
 
 ## 11. Document Storage Model
 
-MarkdownLab stores documents locally in the browser.
+MarkdownHere stores documents locally in the browser.
 
 ### Single document structure
 
 ```ts
 export type MarkdownDocument = {
-  id: string
-  title: string
-  content: string
-  createdAt: string
-  updatedAt: string
-  lastOpenedAt: string
-  source?: "manual" | "import" | "share"
-}
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  lastOpenedAt: string;
+  source?: "manual" | "import" | "share";
+};
 ```
 
 ### Full storage structure
 
 ```ts
-export type MarkdownLabStorage = {
-  version: number
-  activeDocumentId: string | null
-  documents: MarkdownDocument[]
-  settings: MarkdownLabSettings
-}
+export type MarkdownHereStorage = {
+  version: number;
+  activeDocumentId: string | null;
+  documents: MarkdownDocument[];
+  settings: MarkdownHereSettings;
+};
 ```
 
 ### Settings structure
 
 ```ts
-export type MarkdownLabSettings = {
-  theme: "dark" | "light"
-  layoutMode: "split" | "editor" | "preview"
-  splitDirection: "horizontal"
-  panelRatio: number
-  syncScroll: boolean
-  previewOnly: boolean
-  codeTheme: "github-dark"
-  exportTheme: "light"
-  rememberScroll: boolean
-  scrollPositions: Record<string, number>
-}
+export type MarkdownHereSettings = {
+  theme: "dark" | "light";
+  layoutMode: "split" | "editor" | "preview";
+  splitDirection: "horizontal";
+  panelRatio: number;
+  syncScroll: boolean;
+  previewOnly: boolean;
+  codeTheme: "github-dark";
+  exportTheme: "light";
+  rememberScroll: boolean;
+  scrollPositions: Record<string, number>;
+};
 ```
 
 ---
@@ -876,7 +876,7 @@ export type MarkdownLabSettings = {
 ### Storage key
 
 ```ts
-const STORAGE_KEY = "markdownlab:storage:v1"
+const STORAGE_KEY = "MarkdownHere:storage:v1";
 ```
 
 ### Save behavior
@@ -907,7 +907,7 @@ flowchart TD
 ### Migration strategy
 
 ```ts
-export function migrateStorage(storage: unknown): MarkdownLabStorage {
+export function migrateStorage(storage: unknown): MarkdownHereStorage {
   // validate old shape
   // upgrade if needed
   // return safe current version
@@ -918,7 +918,7 @@ export function migrateStorage(storage: unknown): MarkdownLabStorage {
 
 ## 13. Export System
 
-MarkdownLab supports four export formats.
+MarkdownHere supports four export formats.
 
 ```mermaid
 flowchart TD
@@ -959,7 +959,7 @@ Implementation concept:
 
 ```ts
 export function exportMarkdown(document: MarkdownDocument) {
-  downloadTextFile(`${document.title}.md`, document.content, "text/markdown")
+  downloadTextFile(`${document.title}.md`, document.content, "text/markdown");
 }
 ```
 
@@ -982,24 +982,24 @@ Example output structure:
 ```html
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document Title</title>
-  <style>
-    /* embedded export styles */
-  </style>
-</head>
-<body>
-  <main class="markdownlab-export">
-    <!-- rendered markdown -->
-  </main>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document Title</title>
+    <style>
+      /* embedded export styles */
+    </style>
+  </head>
+  <body>
+    <main class="MarkdownHere-export">
+      <!-- rendered markdown -->
+    </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-  <script>
-    mermaid.initialize({ startOnLoad: true, theme: "default" })
-  </script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true, theme: "default" });
+    </script>
+  </body>
 </html>
 ```
 
@@ -1045,17 +1045,17 @@ DOCX export should generate a real `.docx` file.
 
 DOCX support target:
 
-| Markdown element | DOCX output |
-|---|---|
-| Heading | Word heading |
-| Paragraph | Word paragraph |
-| Bold | Bold run |
-| Italic | Italic run |
-| List | Word list |
-| Table | Word table |
-| Code block | Monospace block |
-| Link | Hyperlink |
-| Mermaid | Image if rendered successfully |
+| Markdown element | DOCX output                    |
+| ---------------- | ------------------------------ |
+| Heading          | Word heading                   |
+| Paragraph        | Word paragraph                 |
+| Bold             | Bold run                       |
+| Italic           | Italic run                     |
+| List             | Word list                      |
+| Table            | Word table                     |
+| Code block       | Monospace block                |
+| Link             | Hyperlink                      |
+| Mermaid          | Image if rendered successfully |
 
 Conceptual flow:
 
@@ -1080,7 +1080,7 @@ flowchart TD
 
 ## 14. Share Link System
 
-MarkdownLab supports backend-free sharing.
+MarkdownHere supports backend-free sharing.
 
 ### Requirement
 
@@ -1097,18 +1097,18 @@ The app should:
 ### URL format
 
 ```txt
-https://aaroophan.github.io/MarkdownLab/#mdlab=<payload>
+https://aaroophan.github.io/MarkdownHere/#mdlab=<payload>
 ```
 
 ### Share payload
 
 ```ts
 export type SharePayload = {
-  version: 1
-  title: string
-  content: string
-  createdAt: string
-}
+  version: 1;
+  title: string;
+  content: string;
+  createdAt: string;
+};
 ```
 
 ### Share pipeline
@@ -1140,7 +1140,7 @@ flowchart TD
 
 ### Important security note
 
-Because MarkdownLab does not use a password for share links, anyone with the link can open the shared document.
+Because MarkdownHere does not use a password for share links, anyone with the link can open the shared document.
 
 This is useful for hiding raw text from casual viewing, but it should not be described as secure private storage.
 
@@ -1160,22 +1160,22 @@ flowchart TD
 
 ## 15. Sync Scroll System
 
-MarkdownLab supports accurate two-way scroll sync.
+MarkdownHere supports accurate two-way scroll sync.
 
 ### Required behavior
 
-| Direction | Required |
-|---|---:|
-| Editor to preview | Yes |
-| Preview to editor | Yes |
-| Toggle off | Yes |
-| Accurate mapping | Yes |
+| Direction         | Required |
+| ----------------- | -------: |
+| Editor to preview |      Yes |
+| Preview to editor |      Yes |
+| Toggle off        |      Yes |
+| Accurate mapping  |      Yes |
 
 ### Problem
 
 Editor content is plain text lines. Preview content is rendered HTML blocks.
 
-To sync accurately, MarkdownLab needs a mapping between source lines and preview elements.
+To sync accurately, MarkdownHere needs a mapping between source lines and preview elements.
 
 ### Mapping strategy
 
@@ -1218,7 +1218,7 @@ sequenceDiagram
 ### Infinite loop protection
 
 ```ts
-let activeScrollSource: "editor" | "preview" | null = null
+let activeScrollSource: "editor" | "preview" | null = null;
 ```
 
 When editor scroll triggers preview scroll, preview scroll events should be ignored briefly.
@@ -1227,7 +1227,7 @@ When editor scroll triggers preview scroll, preview scroll events should be igno
 
 ## 16. Command Palette
 
-MarkdownLab should include a command palette because the app is developer-focused.
+MarkdownHere should include a command palette because the app is developer-focused.
 
 ### Shortcut
 
@@ -1272,20 +1272,20 @@ mindmap
 
 ```ts
 export type Command = {
-  id: string
-  label: string
-  description?: string
-  category: "document" | "export" | "copy" | "view" | "insert"
-  shortcut?: string
-  run: () => void | Promise<void>
-}
+  id: string;
+  label: string;
+  description?: string;
+  category: "document" | "export" | "copy" | "view" | "insert";
+  shortcut?: string;
+  run: () => void | Promise<void>;
+};
 ```
 
 ---
 
 ## 17. UI Layout
 
-MarkdownLab uses a VS Code-inspired layout.
+MarkdownHere uses a VS Code-inspired layout.
 
 ```txt
 ┌──────────────────────────────────────────────────────────────┐
@@ -1301,19 +1301,19 @@ MarkdownLab uses a VS Code-inspired layout.
 
 ### Main UI components
 
-| Component | Purpose |
-|---|---|
-| `AppShell` | Overall app layout. |
-| `TopToolbar` | Main actions. |
-| `DocumentSidebar` | Local documents list. |
-| `EditorPanel` | CodeMirror editor wrapper. |
-| `PreviewPanel` | Markdown preview wrapper. |
-| `ResizableSplitPane` | Drag-resizable editor/preview split. |
-| `StatusBar` | Word count, saved status, active mode. |
-| `CommandPalette` | Keyboard-driven actions. |
-| `ExportMenu` | Export format selector. |
-| `ShareDialog` | Share URL generation and copy. |
-| `TableGeneratorDialog` | Insert Markdown tables. |
+| Component              | Purpose                                |
+| ---------------------- | -------------------------------------- |
+| `AppShell`             | Overall app layout.                    |
+| `TopToolbar`           | Main actions.                          |
+| `DocumentSidebar`      | Local documents list.                  |
+| `EditorPanel`          | CodeMirror editor wrapper.             |
+| `PreviewPanel`         | Markdown preview wrapper.              |
+| `ResizableSplitPane`   | Drag-resizable editor/preview split.   |
+| `StatusBar`            | Word count, saved status, active mode. |
+| `CommandPalette`       | Keyboard-driven actions.               |
+| `ExportMenu`           | Export format selector.                |
+| `ShareDialog`          | Share URL generation and copy.         |
+| `TableGeneratorDialog` | Insert Markdown tables.                |
 
 ### Preview-only mode
 
@@ -1334,18 +1334,18 @@ It keeps:
 
 ## 18. Keyboard Shortcuts
 
-| Shortcut | Action |
-|---|---|
-| `Ctrl + K` | Open command palette |
-| `Ctrl + S` | Manual save |
-| `Ctrl + B` | Bold selected text |
-| `Ctrl + I` | Italic selected text |
-| `Ctrl + Shift + P` | Toggle preview-only mode |
-| `Ctrl + Alt + E` | Open export menu |
-| `Ctrl + Alt + S` | Toggle sync scroll |
-| `Ctrl + Alt + T` | Toggle theme |
-| `Ctrl + Alt + N` | New document |
-| `Ctrl + Alt + O` | Open/import Markdown file |
+| Shortcut           | Action                    |
+| ------------------ | ------------------------- |
+| `Ctrl + K`         | Open command palette      |
+| `Ctrl + S`         | Manual save               |
+| `Ctrl + B`         | Bold selected text        |
+| `Ctrl + I`         | Italic selected text      |
+| `Ctrl + Shift + P` | Toggle preview-only mode  |
+| `Ctrl + Alt + E`   | Open export menu          |
+| `Ctrl + Alt + S`   | Toggle sync scroll        |
+| `Ctrl + Alt + T`   | Toggle theme              |
+| `Ctrl + Alt + N`   | New document              |
+| `Ctrl + Alt + O`   | Open/import Markdown file |
 
 ---
 
@@ -1354,7 +1354,7 @@ It keeps:
 Recommended folder structure:
 
 ```txt
-MarkdownLab/
+MarkdownHere/
 ├── public/
 │   ├── favicon.ico
 │   └── screenshots/
@@ -1508,19 +1508,19 @@ npm install shiki
 `next.config.ts` should be configured for GitHub Pages.
 
 ```ts
-import type { NextConfig } from "next"
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "export",
-  basePath: "/MarkdownLab",
-  assetPrefix: "/MarkdownLab/",
+  basePath: "/MarkdownHere",
+  assetPrefix: "/MarkdownHere/",
   images: {
-    unoptimized: true
+    unoptimized: true,
   },
-  trailingSlash: true
-}
+  trailingSlash: true,
+};
 
-export default nextConfig
+export default nextConfig;
 ```
 
 ### Why this is needed
@@ -1528,13 +1528,13 @@ export default nextConfig
 GitHub Pages hosts the app under:
 
 ```txt
-/MarkdownLab
+/MarkdownHere
 ```
 
 So static assets also need to be loaded from:
 
 ```txt
-/MarkdownLab/_next/...
+/MarkdownHere/_next/...
 ```
 
 ---
@@ -1544,7 +1544,7 @@ So static assets also need to be loaded from:
 Recommended GitHub Actions workflow:
 
 ```yml
-name: Deploy MarkdownLab to GitHub Pages
+name: Deploy MarkdownHere to GitHub Pages
 
 on:
   push:
@@ -1604,7 +1604,7 @@ jobs:
 
 ### 23.1 Markdown HTML safety
 
-MarkdownLab should sanitize rendered HTML.
+MarkdownHere should sanitize rendered HTML.
 
 Dangerous input example:
 
@@ -1632,13 +1632,13 @@ Mermaid should run with safe configuration.
 mermaid.initialize({
   startOnLoad: false,
   securityLevel: "strict",
-  theme: "default"
-})
+  theme: "default",
+});
 ```
 
 ### 23.3 Share URL privacy
 
-MarkdownLab share URLs are not private storage.
+MarkdownHere share URLs are not private storage.
 
 Because the link contains the document payload, anyone with the link can open it.
 
@@ -1652,15 +1652,15 @@ Users should be given a clear **Clear Local Data** button.
 
 ## 24. Known Limitations
 
-| Limitation | Reason | Workaround |
-|---|---|---|
-| No cloud sync | Static app has no backend | Export/import files manually |
-| No accounts | No backend/auth service | Use browser-only documents |
-| Long share links may fail | URL length limits | Offer `.md` download instead |
-| DOCX Mermaid support is harder | Word needs image/data conversion | Convert rendered SVG to PNG |
-| PDF layout may vary | Browser DOM capture limitations | Use export-specific light CSS |
-| Large documents may affect performance | Browser-only rendering | Debounce preview rendering |
-| localStorage capacity is limited | Browser storage quota | Warn users and support file export |
+| Limitation                             | Reason                           | Workaround                         |
+| -------------------------------------- | -------------------------------- | ---------------------------------- |
+| No cloud sync                          | Static app has no backend        | Export/import files manually       |
+| No accounts                            | No backend/auth service          | Use browser-only documents         |
+| Long share links may fail              | URL length limits                | Offer `.md` download instead       |
+| DOCX Mermaid support is harder         | Word needs image/data conversion | Convert rendered SVG to PNG        |
+| PDF layout may vary                    | Browser DOM capture limitations  | Use export-specific light CSS      |
+| Large documents may affect performance | Browser-only rendering           | Debounce preview rendering         |
+| localStorage capacity is limited       | Browser storage quota            | Warn users and support file export |
 
 ---
 
@@ -1721,8 +1721,8 @@ Users should be given a clear **Clear Local Data** button.
 ### Clone repository
 
 ```bash
-git clone https://github.com/Aaroophan/MarkdownLab.git
-cd MarkdownLab
+git clone https://github.com/Aaroophan/MarkdownHere.git
+cd MarkdownHere
 ```
 
 ### Install dependencies
@@ -1759,7 +1759,7 @@ out/
 
 ## 27. Contribution Guide
 
-MarkdownLab is planned as a focused developer tool.
+MarkdownHere is planned as a focused developer tool.
 
 ### Good contributions
 
@@ -1806,7 +1806,7 @@ Software.
 
 <div align="center">
 
-**MarkdownLab**  
+**MarkdownHere**  
 A static, local-first Markdown document studio for developers.
 
 [Portfolio](https://aaroophan.dev/Aaroophan) · [GitHub](https://github.com/Aaroophan) · [Medium](https://medium.com/@aaroophan)

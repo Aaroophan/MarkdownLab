@@ -7,7 +7,7 @@ export type MarkdownDocument = {
   lastOpenedAt: string
 }
 
-export type MarkdownLabSettings = {
+export type MarkdownHereSettings = {
   theme: 'dark' | 'light'
   layoutMode: 'split' | 'editor' | 'preview'
   splitDirection: 'horizontal'
@@ -19,9 +19,9 @@ export type MarkdownLabSettings = {
   rememberScroll: boolean
 }
 
-export type MarkdownLabStorage = {
+export type MarkdownHereStorage = {
   version: number
   activeDocumentId: string | null
   documents: MarkdownDocument[]
-  settings: MarkdownLabSettings
+  settings: MarkdownHereSettings
 }

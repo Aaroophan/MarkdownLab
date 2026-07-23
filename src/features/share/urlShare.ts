@@ -15,7 +15,7 @@ export async function createShareLink(payload: SharePayload): Promise<ShareResul
 
     // Build full URL
     const hash = `#mdlab=${encrypted}`
-    const fullUrl = `${BASE_URL}/MarkdownLab/${hash}`
+    const fullUrl = `${BASE_URL}/MarkdownHere/${hash}`
 
     // Check URL length
     if (fullUrl.length > MAX_URL_LENGTH) {

@@ -1,9 +1,9 @@
 'use client'
 
 import { create } from 'zustand'
-import { MarkdownDocument, MarkdownLabSettings, MarkdownLabStorage } from './documentTypes'
+import { MarkdownDocument, MarkdownHereSettings, MarkdownHereStorage } from './documentTypes'
 
-const DEFAULT_SETTINGS: MarkdownLabSettings = {
+const DEFAULT_SETTINGS: MarkdownHereSettings = {
   theme: 'dark',
   layoutMode: 'split',
   splitDirection: 'horizontal',
@@ -18,7 +18,7 @@ const DEFAULT_SETTINGS: MarkdownLabSettings = {
 export type DocumentStore = {
   documents: MarkdownDocument[]
   activeDocumentId: string | null
-  settings: MarkdownLabSettings
+  settings: MarkdownHereSettings
   isSaved: boolean
 
   // Document actions
@@ -30,7 +30,7 @@ export type DocumentStore = {
   getActiveDocument: () => MarkdownDocument | null
 
   // Settings actions
-  updateSettings: (settings: Partial<MarkdownLabSettings>) => void
+  updateSettings: (settings: Partial<MarkdownHereSettings>) => void
   setTheme: (theme: 'dark' | 'light') => void
   setLayoutMode: (mode: 'split' | 'editor' | 'preview') => void
   setPanelRatio: (ratio: number) => void
@@ -123,7 +123,7 @@ export const useDocumentStore = create<DocumentStore>((set, get) => ({
     return state.documents.find((d) => d.id === state.activeDocumentId) || null
   },
 
-  updateSettings: (newSettings: Partial<MarkdownLabSettings>) => {
+  updateSettings: (newSettings: Partial<MarkdownHereSettings>) => {
     set((state) => ({
       settings: { ...state.settings, ...newSettings },
       isSaved: false,
@@ -154,9 +154,9 @@ export const useDocumentStore = create<DocumentStore>((set, get) => ({
     if (typeof window === 'undefined') return
 
     try {
-      const stored = localStorage.getItem('markdownlab-storage')
+      const stored = localStorage.getItem('MarkdownHere-storage')
       if (stored) {
-        const data: MarkdownLabStorage = JSON.parse(stored)
+        const data: MarkdownHereStorage = JSON.parse(stored)
         set({
           documents: data.documents || [],
           activeDocumentId: data.activeDocumentId,
@@ -174,13 +174,13 @@ export const useDocumentStore = create<DocumentStore>((set, get) => ({
 
     try {
       const state = get()
-      const storageData: MarkdownLabStorage = {
+      const storageData: MarkdownHereStorage = {
         version: 1,
         activeDocumentId: state.activeDocumentId,
         documents: state.documents,
         settings: state.settings,
       }
-      localStorage.setItem('markdownlab-storage', JSON.stringify(storageData))
+      localStorage.setItem('MarkdownHere-storage', JSON.stringify(storageData))
       set({ isSaved: true })
     } catch (error) {
       console.error('Failed to save to storage:', error)
@@ -191,7 +191,7 @@ export const useDocumentStore = create<DocumentStore>((set, get) => ({
     if (typeof window === 'undefined') return
 
     try {
-      localStorage.removeItem('markdownlab-storage')
+      localStorage.removeItem('MarkdownHere-storage')
       set({
         documents: [],
         activeDocumentId: null,

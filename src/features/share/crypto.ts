@@ -3,7 +3,7 @@
 // This is NOT cryptographically secure against someone with the link
 // It's obfuscation only - the real security model is: don't share the link with untrusted parties
 
-const APP_KEY = 'MarkdownLabShareV1'
+const APP_KEY = 'MarkdownHereShareV1'
 
 async function deriveKey(): Promise<CryptoKey> {
   const encoder = new TextEncoder()
@@ -20,7 +20,7 @@ async function deriveKey(): Promise<CryptoKey> {
       name: 'HKDF',
       hash: 'SHA-256',
       salt: new Uint8Array(16),
-      info: encoder.encode('MarkdownLab-Share'),
+      info: encoder.encode('MarkdownHere-Share'),
     },
     keyMaterial,
     { name: 'AES-GCM', length: 256 },

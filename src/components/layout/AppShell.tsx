@@ -28,10 +28,10 @@ import rehypeStringify from 'rehype-stringify'
 import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from 'rehype-highlight'
 
-const STORAGE_KEY = 'markdownlab:content:v4'
-const SETTINGS_KEY = 'markdownlab:settings:v5'
+const STORAGE_KEY = 'MarkdownHere:content:v4'
+const SETTINGS_KEY = 'MarkdownHere:settings:v5'
 
-const starterMarkdown = `# MarkdownLab
+const starterMarkdown = `# MarkdownHere
 
 A VS Code-style Markdown editor with live preview, Mermaid diagrams, math, GFM extras, and safe HTML support.
 
@@ -39,7 +39,7 @@ A VS Code-style Markdown editor with live preview, Mermaid diagrams, math, GFM e
 
 ### Text formatting
 
-Plain paragraphs support **bold**, *italic*, ***bold italic***, ~~strikethrough~~, <u>underline</u>, \\*escaped characters\\*, inline code like \`const app = "MarkdownLab"\`, and hard line breaks.  
+Plain paragraphs support **bold**, *italic*, ***bold italic***, ~~strikethrough~~, <u>underline</u>, \\*escaped characters\\*, inline code like \`const app = "MarkdownHere"\`, and hard line breaks.  
 This line follows a two-space Markdown line break.
 
 ### Lists
@@ -72,7 +72,7 @@ This line follows a two-space Markdown line break.
 >> This is a nested quote.
 
 > [!NOTE]
-> MarkdownLab supports GitHub-style alert blocks.
+> MarkdownHere supports GitHub-style alert blocks.
 
 > [!TIP]
 > Use the live preview while writing documentation.
@@ -111,7 +111,7 @@ Markdown is useful for documentation.[^1]
 
 ### Definition lists and abbreviations
 
-MarkdownLab
+MarkdownHere
 : A local-first Markdown document studio.
 
 Preview
@@ -141,7 +141,7 @@ $$
 
 ---
 
-MarkdownLab stays browser-only and static-hosting friendly.
+MarkdownHere stays browser-only and static-hosting friendly.
 `
 
 type ThemeMode = 'dark' | 'light'
@@ -955,7 +955,7 @@ export default function AppShell() {
             }
 
             try {
-              const id = `markdownlab-mermaid-${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`
+              const id = `MarkdownHere-mermaid-${Date.now()}-${index}-${Math.random().toString(16).slice(2)}`
               const result = await mermaid.render(id, chart)
               if (cancelled) return
 
@@ -1006,7 +1006,7 @@ export default function AppShell() {
   const resetContent = useCallback(() => {
     setContent(starterMarkdown)
     editorViewRef.current?.focus?.()
-    showToast('Reset to the MarkdownLab sample.', 'info')
+    showToast('Reset to the MarkdownHere sample.', 'info')
   }, [showToast])
 
   const copyMarkdown = useCallback(async () => {
@@ -1015,7 +1015,7 @@ export default function AppShell() {
   }, [content, showToast])
 
   const downloadMarkdown = useCallback(() => {
-    downloadBlob('markdownlab.md', new Blob([content], { type: 'text/markdown;charset=utf-8' }))
+    downloadBlob('MarkdownHere.md', new Blob([content], { type: 'text/markdown;charset=utf-8' }))
     showToast('Markdown downloaded.')
   }, [content, showToast])
 
@@ -1080,7 +1080,7 @@ export default function AppShell() {
         pageIndex += 1
       }
 
-      pdf.save('markdownlab-preview.pdf')
+      pdf.save('MarkdownHere-preview.pdf')
       showToast('PDF exported.')
     } catch (error) {
       console.error(error)
@@ -1101,12 +1101,12 @@ export default function AppShell() {
         <div className="mlp-brand">
           <FileText size={24} />
           <div>
-            <h1>MarkdownLab</h1>
+            <h1>MarkdownHere</h1>
             <p>Markdown live preview</p>
           </div>
         </div>
 
-        <nav className="mlp-toolbar" aria-label="MarkdownLab actions">
+        <nav className="mlp-toolbar" aria-label="MarkdownHere actions">
           <ToolbarButton onClick={resetContent} title="Reset sample content">
             <RotateCcw size={16} />
             Reset
@@ -1211,7 +1211,7 @@ export default function AppShell() {
         <span>{syncScroll ? 'sync scroll on' : 'sync scroll off'}</span>
         <span>{Math.round(splitPercent)}% editor width</span>
         <span>saved locally in this browser</span>
-        <a href="https://github.com/Aaroophan/MarkdownLab" target="_blank" rel="noreferrer">
+        <a href="https://github.com/Aaroophan/MarkdownHere" target="_blank" rel="noreferrer">
           <Github size={14} /> GitHub
         </a>
       </footer>

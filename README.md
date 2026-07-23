@@ -1,10 +1,11 @@
-# MarkdownLab
+# MarkdownHere
 
 A fully client-side markdown editor with live preview, mermaid diagrams, code highlighting, multi-document support, and shareable URL-based document links.
 
 ## Features
 
 ### Core Editor
+
 - **CodeMirror Editor** - Advanced syntax highlighting and editing
 - **Live Markdown Preview** - Real-time rendering as you type
 - **Mermaid Diagrams** - Create flowcharts, sequence diagrams, and more
@@ -12,12 +13,14 @@ A fully client-side markdown editor with live preview, mermaid diagrams, code hi
 - **Dark/Light Themes** - System preference detection and manual toggle
 
 ### Document Management
+
 - **Multi-Document Support** - Create, rename, and delete documents
 - **Auto-Save** - Automatic localStorage persistence
 - **Import/Export** - Import .md files, export to .md/.html/.pdf/.docx
 - **Document Status** - Track save state with visual indicators
 
 ### Advanced Features
+
 - **Sync Scroll** - Synchronized editor/preview scrolling
 - **Preview-Only Mode** - Full-screen markdown viewing
 - **Split View** - Side-by-side editor and preview
@@ -28,6 +31,7 @@ A fully client-side markdown editor with live preview, mermaid diagrams, code hi
 - **Insert Elements** - Quick insert buttons for formatting
 
 ### Sharing
+
 - **URL-Based Sharing** - Compress document data into shareable URL hash
 - **Web Crypto Encryption** - AES-GCM encryption using browser APIs
 - **Auto-Detection** - Opens shared documents automatically on link
@@ -36,6 +40,7 @@ A fully client-side markdown editor with live preview, mermaid diagrams, code hi
 ## Architecture
 
 ### 100% Client-Side
+
 - No backend server
 - No API routes
 - No authentication needed
@@ -43,6 +48,7 @@ A fully client-side markdown editor with live preview, mermaid diagrams, code hi
 - Compatible with GitHub Pages static hosting
 
 ### Technologies
+
 - **Framework**: Next.js 16 with App Router
 - **Editor**: CodeMirror 6
 - **Markdown Renderer**: unified/remark stack
@@ -54,6 +60,7 @@ A fully client-side markdown editor with live preview, mermaid diagrams, code hi
 - **Crypto**: Web Crypto API (AES-GCM)
 
 ### Project Structure
+
 ```
 src/
 ├── app/              # Next.js app directory
@@ -78,8 +85,8 @@ src/
 
 ```bash
 # Clone and install dependencies
-git clone https://github.com/aaroophan/MarkdownLab
-cd MarkdownLab
+git clone https://github.com/aaroophan/MarkdownHere
+cd MarkdownHere
 npm install
 
 # Or with pnpm
@@ -92,7 +99,7 @@ pnpm install
 # Start dev server
 npm run dev
 
-# Open http://localhost:3000/MarkdownLab/
+# Open http://localhost:3000/MarkdownHere/
 ```
 
 ### Build for Production
@@ -110,11 +117,12 @@ npm run build
 This project uses Next.js static export (`output: 'export'`) configured for GitHub Pages:
 
 ### next.config.mjs
+
 ```js
 {
   output: 'export',
-  basePath: '/MarkdownLab',
-  assetPrefix: '/MarkdownLab/',
+  basePath: '/MarkdownHere',
+  assetPrefix: '/MarkdownHere/',
   trailingSlash: true,
   images: { unoptimized: true }
 }
@@ -128,7 +136,7 @@ The project includes automated GitHub Pages deployment via `.github/workflows/de
 2. **Build**: Compiles Next.js to static HTML/CSS/JS in `./out`
 3. **Deploy**: Uploads to GitHub Pages automatically
 
-**URL**: https://aaroophan.github.io/MarkdownLab
+**URL**: https://aaroophan.github.io/MarkdownHere
 
 ### Manual Deployment
 
@@ -143,17 +151,20 @@ npm run build
 ## User Guide
 
 ### Creating Documents
+
 1. Click **"New Document"** in the sidebar or press Ctrl+N
 2. Start typing markdown in the editor
 3. Watch live preview update in real-time
 
 ### Editing
+
 - **Format text** using the Insert menu or keyboard shortcuts
 - **View source** in editor, **preview** on the right
 - **Preview-only mode** (Ctrl+Shift+P) hides editor for clean reading
 - **Sync scroll** toggle keeps editor and preview aligned
 
 ### Exporting
+
 1. Click **More Options (...)** menu
 2. Select export format:
    - **Markdown** - Save as .md file
@@ -162,6 +173,7 @@ npm run build
    - **DOCX** - Microsoft Word document
 
 ### Sharing
+
 1. Click **More Options (...) → Share Document**
 2. App creates compressed encrypted URL with document data
 3. Share link automatically copied to clipboard
@@ -170,20 +182,22 @@ npm run build
 **Security Note**: Since there's no password, anyone with the link can view/edit the document. This is URL-based sharing, not end-to-end encrypted messaging.
 
 ### Large Documents
+
 Documents >3000 characters in compressed form cannot be shared via URL:
+
 - **Option 1**: Download as Markdown for email/messaging
 - **Option 2**: Export as HTML for standalone sharing
 - **Option 3**: Use smaller documents for URL sharing
 
 ## Keyboard Shortcuts
 
-| Shortcut | Action |
-|----------|--------|
-| Ctrl+K | Open Command Palette |
-| Ctrl+N | New Document |
-| Ctrl+S | Save Document |
+| Shortcut     | Action                   |
+| ------------ | ------------------------ |
+| Ctrl+K       | Open Command Palette     |
+| Ctrl+N       | New Document             |
+| Ctrl+S       | Save Document            |
 | Ctrl+Shift+P | Toggle Preview-Only Mode |
-| Escape | Close Modals |
+| Escape       | Close Modals             |
 
 ## Known Limitations
 
@@ -199,6 +213,7 @@ Documents >3000 characters in compressed form cannot be shared via URL:
 ## Roadmap
 
 ### Potential Features
+
 - [ ] Cloud sync (optional, with settings)
 - [ ] Collaborative editing
 - [ ] Custom CSS themes
@@ -209,6 +224,7 @@ Documents >3000 characters in compressed form cannot be shared via URL:
 - [ ] Fullscreen focus mode
 
 ### Completed Phases
+
 - ✅ Phase 1: Core editor with CodeMirror and live preview
 - ✅ Phase 2: Multi-document management and localStorage
 - ✅ Phase 3: Power-user UX (command palette, shortcuts, sync scroll)
@@ -218,6 +234,7 @@ Documents >3000 characters in compressed form cannot be shared via URL:
 ## Contributing
 
 This is a reference implementation. Feel free to:
+
 - Fork and customize for your needs
 - Extract patterns for your own projects
 - Submit issues and PRs
@@ -229,6 +246,7 @@ MIT - Use freely, modify as needed, attribution appreciated.
 ## Technical Notes
 
 ### Why Client-Side Only?
+
 - **No server costs** - Runs on GitHub Pages for free
 - **Privacy** - All data stays in your browser
 - **Reliability** - No backend to maintain or monitor
@@ -244,6 +262,7 @@ MIT - Use freely, modify as needed, attribution appreciated.
 **Web Crypto**: Built-in browser APIs, no external crypto libs
 
 ### Performance
+
 - Lazy-load mermaid diagrams (only renders visible)
 - Debounce markdown parsing (500ms wait after typing)
 - Virtual scrolling for large documents
@@ -253,10 +272,11 @@ MIT - Use freely, modify as needed, attribution appreciated.
 ## Support
 
 Issues? Questions? Check:
+
 1. Browser console for errors (F12)
 2. GitHub Issues on repository
 3. Disable extensions that might interfere
 
 ---
 
-**MarkdownLab** - A modern markdown editor for the modern web.
+**MarkdownHere** - A modern markdown editor for the modern web.
